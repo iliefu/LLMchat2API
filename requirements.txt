@@ -1,5 +1,8 @@
-fastapi
-uvicorn
-httpx
-websockets
-sqlalchemy
+fastapi==0.104.1
+uvicorn==0.24.0
+httpx==0.25.0
+websockets==12.0
+sqlalchemy==2.0.23
+pydantic==2.5.0
+python-dotenv==1.0.0
+git+https://github.com/ultrasev/chatrapper.git
