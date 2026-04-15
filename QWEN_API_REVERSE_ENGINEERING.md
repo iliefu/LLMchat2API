@@ -94,3 +94,67 @@ print(response.json())
 - If you receive a 404 error, check the endpoint URL.
 - If responses are not as expected, review the request payloads and headers.
 - For persistent issues, consult the API documentation or reach out for support.
+
+Quick Action Plan
+Step 1: Gather API Information
+bash
+# Option A: Run automated analyzer
+python api_reverse_engineer.py
+# (paste your Qwen token when prompted)
+
+# Option B: Manual analysis (follow guide in browser)
+# 1. Open https://chat.qwen.ai
+# 2. Press F12 → Network tab
+# 3. Send a message
+# 4. Capture POST request details
+Step 2: Document Findings
+Create a file qwen_api_info.json:
+
+JSON
+{
+  "endpoint": "https://chat.qwen.ai/[ACTUAL_PATH]",
+  "method": "POST",
+  "auth_header": "Authorization: Bearer <token>",
+  "request_format": {
+    "model": "qwen-max",
+    "messages": [{"role": "user", "content": ""}],
+    "stream": true
+  },
+  "response_format": {
+    "type": "streaming",
+    "delimiter": "data: ",
+    "message_path": "choices[0].delta.content"
+  },
+  "available_models": ["qwen-max", "qwen-plus", "qwen-turbo"]
+}
+Step 3: Update qwen_wrapper.py
+Based on findings:
+
+Python
+# Update these values:
+self.api_endpoint = "https://chat.qwen.ai/[DISCOVERED_ENDPOINT]"
+self.response_field_path = "[MESSAGE_EXTRACTION_PATH]"
+self.available_models = ["qwen-max", "qwen-plus", "qwen-turbo"]
+Step 4: Test Integration
+bash
+# Test the wrapper
+python -c "
+import asyncio
+from qwen_wrapper import AsyncQwenRapper
+wrapper = AsyncQwenRapper('YOUR_TOKEN', 'qwen-max')
+asyncio.run(wrapper('Hello'))
+"
+🔑 Key Things to Capture
+Item	How to Find	Example
+Endpoint	Network tab → POST request URL	https://chat.qwen.ai/api/chat
+Token	DevTools → Cookies/Headers	eyJhbGci...
+Request Body	Network tab → Request	{"messages": [...], "stream": true}
+Response	Network tab → Response	data: {"choices":[...]}
+Models	API response or UI dropdown	qwen-max, qwen-plus
+🚀 Once You Have the API Details
+Share what you discover and I'll help you:
+
+✅ Update qwen_wrapper.py
+✅ Integrate with server.py
+✅ Test the full integration
+✅ Add to LLMchat2API repo
