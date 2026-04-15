@@ -6,5 +6,13 @@ services:
       - '8000:8000'
     environment:
       - CHATRAPPER_TOKEN=${CHATRAPPER_TOKEN}
+      - QWEN_TOKEN=${QWEN_TOKEN}
+      - LLM_PROVIDER=${LLM_PROVIDER:-openai}
     volumes:
       - ./conversations.db:/app/conversations.db
+    networks:
+      - llmchat_network
+
+networks:
+  llmchat_network:
+    driver: bridge
